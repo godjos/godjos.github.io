@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>AMG性能优化相关文章 | MRZ's blog</title><meta name="author" content="MRZ"><meta name="copyright" content="MRZ"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="版权声明： 除非注明，本博文章均为原创，转载请以链接形式标明本文地址。   Create 2023-03-31 Update 2023-10-11 Update 2024-06-04  性能优化是一个非常广泛的概念，这里指结合计算机体系结构提高性能，纯减少算法复杂度的工作并没有包括在内。AMG解法器非常多，最近开发活跃的如下表：    AMG解法器 开发者 说明 备注     BoomerAMG">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>AMG性能优化相关文章 | MRZ's blog</title><meta name="author" content="MRZ"><meta name="copyright" content="MRZ"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="版权声明： 除非注明，本博文章均为原创，转载请以链接形式标明本文地址。   Create 2023-03-31 Update 2023-10-11 Update 2024-06-04 Update 2024-06-11  性能优化是一个非常广泛的概念，这里指结合计算机体系结构提高性能，纯减少算法复杂度的工作并没有包括在内。AMG解法器非常多，最近开发活跃的如下表：    AMG解法器 开发者 说">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AMG性能优化相关文章">
 <meta property="og:url" content="https://maorz.space/2023/03/31/AMG%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%9B%B8%E5%85%B3%E6%96%87%E7%AB%A0/index.html">
 <meta property="og:site_name" content="MRZ&#39;s blog">
-<meta property="og:description" content="版权声明： 除非注明，本博文章均为原创，转载请以链接形式标明本文地址。   Create 2023-03-31 Update 2023-10-11 Update 2024-06-04  性能优化是一个非常广泛的概念，这里指结合计算机体系结构提高性能，纯减少算法复杂度的工作并没有包括在内。AMG解法器非常多，最近开发活跃的如下表：    AMG解法器 开发者 说明 备注     BoomerAMG">
+<meta property="og:description" content="版权声明： 除非注明，本博文章均为原创，转载请以链接形式标明本文地址。   Create 2023-03-31 Update 2023-10-11 Update 2024-06-04 Update 2024-06-11  性能优化是一个非常广泛的概念，这里指结合计算机体系结构提高性能，纯减少算法复杂度的工作并没有包括在内。AMG解法器非常多，最近开发活跃的如下表：    AMG解法器 开发者 说">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2023/03/31/B8k1udiy75PSjr6.png">
 <meta property="article:published_time" content="2023-03-31T11:51:44.000Z">
-<meta property="article:modified_time" content="2024-06-04T12:56:23.344Z">
+<meta property="article:modified_time" content="2024-06-11T02:02:40.391Z">
 <meta property="article:author" content="MRZ">
 <meta property="article:tag" content="文献阅读">
 <meta property="article:tag" content="AMG算法">
@@ -58,7 +58,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2024-06-04 20:56:23'
+  postUpdate: '2024-06-11 10:02:40'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -162,14 +162,15 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2023/03/31/B8k1udiy75PSjr6.png')"><nav id="nav"><span id="blog-info"><a href="/" title="MRZ's blog"><span class="site-name">MRZ's blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">AMG性能优化相关文章</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-03-31T11:51:44.000Z" title="发表于 2023-03-31 19:51:44">2023-03-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-04T12:56:23.344Z" title="更新于 2024-06-04 20:56:23">2024-06-04</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="AMG性能优化相关文章"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><hr>
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2023/03/31/B8k1udiy75PSjr6.png')"><nav id="nav"><span id="blog-info"><a href="/" title="MRZ's blog"><span class="site-name">MRZ's blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">AMG性能优化相关文章</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-03-31T11:51:44.000Z" title="发表于 2023-03-31 19:51:44">2023-03-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-11T02:02:40.391Z" title="更新于 2024-06-11 10:02:40">2024-06-11</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="AMG性能优化相关文章"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><hr>
 <p>版权声明：<br>
 除非注明，本博文章均为原创，转载请以链接形式标明本文地址。</p>
 <hr>
 <blockquote>
 <p>Create 2023-03-31<br>
 Update 2023-10-11<br>
-Update 2024-06-04</p>
+Update 2024-06-04<br>
+Update 2024-06-11</p>
 </blockquote>
 <p>性能优化是一个非常广泛的概念，这里指结合计算机体系结构提高性能，纯减少算法复杂度的工作并没有包括在内。AMG解法器非常多，最近开发活跃的如下表：</p>
 <table>
@@ -285,6 +286,11 @@ Update 2024-06-04</p>
 <li>R.D. Falgout, <a target="_blank" rel="noopener" href="https://github.com/hypre-space/hypre/wiki/pubs/CiSE_2006_amg_220851.pdf">An Introduction to Algebraic Multigrid</a>, Computing in Science and Engineering, Special Issue on Multigrid Computing, 8 (2006), pp. 24-33. UCRL-JRNL-220851.
 <ul>
 <li>非常简短的介绍AMG基本算法的文章</li>
+</ul>
+</li>
+<li>A.H. Baker, R.D. Falgout, and U.M. Yang, <a target="_blank" rel="noopener" href="https://github.com/hypre-space/hypre/wiki/pubs/apart.pdf">An Assumed Partition Algorithm for Determining Processor Inter-Communication</a>, Parallel Computing, 32 (2006), pp. 394-414. UCRL-JRNL-215757.
+<ul>
+<li>通常AMG中通信由通信包管理，决定进程的接收对象使用的是MPI_Allgatherv操作，作者提出一种假设数据划分的算法，来减少其中的聚合通信操作。</li>
 </ul>
 </li>
 </ul>
@@ -440,11 +446,6 @@ Update 2024-06-04</p>
 <li>A. Bienz, R.D. Falgout, W. Gropp, L.N. Olson, and J.B. Schroder, <a target="_blank" rel="noopener" href="https://github.com/hypre-space/hypre/wiki/pubs/sparsification-2016.pdf">Reducing Parallel Communication in Algebraic Multigrid Through Sparsification</a>, SIAM J. Sci. Comput., 38 (2016), pp. S332-S357. LLNL-JRNL-673388. <a target="_blank" rel="noopener" href="https://github.com/hypre-space/hypre/wiki/pubs/sparsification-2016-supplement.pdf">Supplimentary material</a>.
 <ul>
 <li>Bienz基于她在SC14上提出的保持粗网格层矩阵稀疏化的想法，根据收敛性加上了自适应保持稀疏化的策略。</li>
-</ul>
-</li>
-<li>A.H. Baker, R.D. Falgout, and U.M. Yang, <a target="_blank" rel="noopener" href="https://github.com/hypre-space/hypre/wiki/pubs/apart.pdf">An Assumed Partition Algorithm for Determining Processor Inter-Communication</a>, Parallel Computing, 32 (2006), pp. 394-414. UCRL-JRNL-215757.
-<ul>
-<li>通常AMG中通信由通信包管理，决定进程的接收对象使用的是MPI_Allgatherv操作，作者提出一种假设数据划分的算法，来减少其中的聚合通信操作。</li>
 </ul>
 </li>
 </ul>
