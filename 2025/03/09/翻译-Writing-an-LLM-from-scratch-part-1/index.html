@@ -1,0 +1,257 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>翻译:Writing_an_LLM_from_scratch_part_1 | MRZ's blog</title><meta name="author" content="MRZ"><meta name="copyright" content="MRZ"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="版权声明： 除非注明，本博文章均为原创，转载请以链接形式标明本文地址。  从零开始构建大型语言模型（LLM），第一部分  ref: https:&#x2F;&#x2F;www.gilesthomas.com&#x2F;2024&#x2F;12&#x2F;llm-from-scratch-1  发布于 2024 年 12 月 22 日，主题：AI、从零开始构建 LLM、TIL 深度探索 在圣诞节假期（可能更久）期间，我计划学习Sebastian">
+<meta property="og:type" content="article">
+<meta property="og:title" content="翻译:Writing_an_LLM_from_scratch_part_1">
+<meta property="og:url" content="https://maorz.space/2025/03/09/%E7%BF%BB%E8%AF%91-Writing-an-LLM-from-scratch-part-1/index.html">
+<meta property="og:site_name" content="MRZ&#39;s blog">
+<meta property="og:description" content="版权声明： 除非注明，本博文章均为原创，转载请以链接形式标明本文地址。  从零开始构建大型语言模型（LLM），第一部分  ref: https:&#x2F;&#x2F;www.gilesthomas.com&#x2F;2024&#x2F;12&#x2F;llm-from-scratch-1  发布于 2024 年 12 月 22 日，主题：AI、从零开始构建 LLM、TIL 深度探索 在圣诞节假期（可能更久）期间，我计划学习Sebastian">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://maorz.space/img/avatar.jpg">
+<meta property="article:published_time" content="2025-03-09T12:56:57.000Z">
+<meta property="article:modified_time" content="2025-03-09T13:26:42.273Z">
+<meta property="article:author" content="MRZ">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://maorz.space/img/avatar.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://maorz.space/2025/03/09/%E7%BF%BB%E8%AF%91-Writing-an-LLM-from-scratch-part-1/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><meta/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '翻译:Writing_an_LLM_from_scratch_part_1',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-09 21:26:42'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="MRZ's blog"><span class="site-name">MRZ's blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">翻译:Writing_an_LLM_from_scratch_part_1</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-09T12:56:57.000Z" title="发表于 2025-03-09 20:56:57">2025-03-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-09T13:26:42.273Z" title="更新于 2025-03-09 21:26:42">2025-03-09</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="翻译:Writing_an_LLM_from_scratch_part_1"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><hr>
+<p>版权声明：<br>
+除非注明，本博文章均为原创，转载请以链接形式标明本文地址。</p>
+<hr>
+<h1>从零开始构建大型语言模型（LLM），第一部分</h1>
+<blockquote>
+<p>ref: <a target="_blank" rel="noopener" href="https://www.gilesthomas.com/2024/12/llm-from-scratch-1">https://www.gilesthomas.com/2024/12/llm-from-scratch-1</a></p>
+</blockquote>
+<p><strong>发布于 2024 年 12 月 22 日，主题：AI、从零开始构建 LLM、TIL 深度探索</strong></p>
+<p>在圣诞节假期（可能更久）期间，我计划学习Sebastian Raschka的书《从零开始构建大型语言模型》。我预计每天会学习一章或更少，以便有足够的时间消化内容。每天或每章结束后，我会在这里分享我觉得特别有趣的内容。</p>
+<p>今天的内容可能是最简单的部分：第一章《理解大型语言模型》。</p>
+<p>正如你所料，这一章主要是重申那些与 LLM 稍有接触的人已经知道的内容，因为 Raschka 需要为后续章节做铺垫。不过，这一章也提到了一些底层技术概念——虽然目前还比较粗略，但这些术语在后续章节中会得到详细解释。</p>
+<h2 id="Transformer">Transformer</h2>
+<p>核心信息是，Transformer 架构是 LLM 如此强大的原因。他指出，LLM 不一定非得基于 Transformer 构建，基于 Transformer 的 LLM 也不一定是 GPT，但为了简洁起见，他在书中会忽略这一点。这很合理——如果每次都要说“基于 Transformer 的 LLM”或“GPT LLM”而不是简单的“LLM”，书会变得难以阅读。更不用说“GPT”在大多数人心中与 OpenAI 紧密相关。</p>
+<p>无论如何，正如你所料，这一章的核心是对 Transformer 的高层次概述。他采用了我喜欢的方法，即从历史开始。这很有用，因为很多术语只有在了解其起源背景时才能真正理解。</p>
+<p>最初的 Transformer 是用于机器翻译的，工作原理如下：</p>
+<ul>
+<li>输入文本（例如英语）进入<strong>编码器</strong>。编码器是一个大型神经网络，将文本转换为嵌入（embedding）——一个非常高维空间中的向量（或一组向量），以某种抽象方式表示输入文本的含义。</li>
+<li>然后，这个嵌入被输入<strong>解码器</strong>，解码器会使用它逐个生成另一种语言（例如德语）的 token，这些 token 表达了嵌入中的概念，因此是对原始输入的翻译。解码器会先生成第一个 token，然后使用它和嵌入生成下一个 token，接着使用前两个 token 和嵌入生成第三个 token，以此类推——因此它始终能看到之前的输出来帮助指导输出构建。</li>
+<li>编码器和解码器都可以访问<strong>自注意力机制</strong>（self-attention），这是一种让它们知道在处理特定 token 时应该关注哪些其他 token 的系统。例如，如果它正在处理“the fat cat sat on the mat”（假设一个单词等于一个 token），当处理“cat”时，它可能会更关注“fat”（因为这是形容词修饰的名词），或者当处理“sat”时，它可能会关注“cat”和“mat”（因为它们是动词的主语和间接宾语）。<br>
+这种自注意力机制被编码器（显然需要它，因为它正在构建类似句子含义的心理模型）和解码器（需要它来构建有效的句子）共同使用。</li>
+</ul>
+<p>目前我不太清楚的是，编码器和解码器是否共享相同的注意力机制（允许编码器向解码器传递“提示”，以帮助构建输出，而不仅仅是嵌入中的信息）。我猜测“不共享”，因为如果共享的话，应该会提到。</p>
+<p>自注意力听起来像魔法，说实话，这是我真正期待学习的 LLM 部分——目前我对它的工作原理几乎没有任何概念。当然，Raschka 在这里只是简要提及——第 3 章会详细讨论。</p>
+<p>无论如何，这就是 Transformer 系统的历史背景。接下来人们发现，编码器和解码器实际上可以单独使用。我听说过“仅编码器”或“仅解码器”的模型——基于 GPT 的 LLM 就是后者之一——这解释了这些术语的来源。</p>
+<p>仅编码器模型的一个例子是 BERT，我知道它广泛用于分类任务；事实上，<a target="_blank" rel="noopener" href="http://Answer.AI">Answer.AI</a> 最近发布了 ModernBERT，这是一个针对分类任务的更新版本。这对我来说有些直观意义。如果你有一个设计用于接收文本输入并生成表示其含义（在某种意义上的）嵌入的模型，那么添加一个额外的层将该含义转换为“这段文本的语气是快乐/悲伤/愤怒等”似乎并不难。</p>
+<p>对我来说不太明显的是，这样的编码器如何用于完成这些模型也擅长的任务：填补句子中的空白。Raschka 展示了一个例子：</p>
+<p>This is an ___ of how concise I ___ be<br>
+并预测缺失的单词是“example”和“can”。我知道 BERT 及其同类模型可以做到这一点，但我从未确切知道原因，遗憾的是这一章没有填补这一空白。我现在真的很想研究它，但应该继续按计划进行 :-)</p>
+<p>正如我上面所说，GPT 是仅解码器架构的一个例子。这在我的脑海中比编码器的分类用例更模糊。很明显，能够接收嵌入并生成一系列单词的东西对文本生成很有用。但 GPT 基本上是通过下一个 token 预测来工作的，例如，如果提供输入：</p>
+<p>This is an example of how concise I<br>
+它可能会返回“can”，然后再次运行时提供输入：</p>
+<p>This is an example of how concise I can<br>
+它可能会返回“be”。</p>
+<p>那么问题是，像 GPT 这样的仅解码器模型如何在没有编码器生成的嵌入的情况下工作？</p>
+<p>Raschka 提到的另一件事让我有点困惑，即最初的 Transformer 架构有六个编码器和六个解码器块，而 GPT-3 有 96 个 Transformer 层。这与我对这一切如何运作的模型不太吻合。编码器和解码器看起来像是独立的东西，接收输入（token/嵌入）并生成输出（嵌入/token）。那么，多层编码器或解码器有什么用呢？</p>
+<p>所以——如何设计一个解码器来接收嵌入并输入文本，如何将解码器块分层，以及注意力机制——这些似乎是这本书将为我揭示的内容。但在现阶段，我们真的只是在了解需要解决的问题，而不是解决方案。</p>
+<p>[更新，发布后两小时。我突然想到：如果解码器设计用于接收嵌入和（最初为空的）文本，那么通过给它一个“空”嵌入和一些预先编写的文本，如果训练得当，它可能能够预测下一个单词。这或许就是 GPT 的工作原理？]</p>
+<h2 id="数据">数据</h2>
+<p>从一开始就很明显，训练 LLM 是昂贵的——你听到 OpenAI 最近的模型训练成本高达数亿美元。从我自己的微调 LLM 实验中，我知道在本地训练一个 0.5B 的模型，使用 10,000 个示例，每个示例大约 1,000 个 token（总共 10M token），大约需要半小时，而在一个 8x A100 80GiB 的云服务器上训练一个 8B 模型，使用相同数量的 token，成本约为 10 美元/小时，需要 20 分钟。</p>
+<p>GPT-3 显然是在 3000 亿个 token 上训练的，所以工作量是 300,000,000,000 / 10,000,000 = 30,000 倍。让我们天真地将我的成本/时间数字放大——显然这将是一个非常粗略的近似值，但应该在一个数量级左右：</p>
+<ul>
+<li>本地训练需要 15,000 小时，大约 21 个月。</li>
+<li>更大的模型需要 10,000 小时，大约 13 个月，成本为 10 万美元。<br>
+说实话，这两个数字都比我预期的低——也许我在数学上哪里出错了？——但无论如何，这比任何阅读这本书的人可能愿意花费的时间和金钱都要多得多。</li>
+</ul>
+<p>在资源受限的情况下，Raschka 在他的书中给出了最合理的解决方案，即完成启动 LLM 训练所需的所有工作，稍微训练一下以证明它有效，然后指向一组预训练权重，人们可以下载并插入以进行进一步的微调。</p>
+<p>虽然拥有一个 LLM 并能够说“这都是我的，我从头开始训练了它”会很好，但这似乎是最合理的实际解决方法，因为真正从头开始训练的成本高得离谱。</p>
+<h2 id="非完全勘误">非完全勘误</h2>
+<p>这一章中有几件事——至少在我看来——并不完全正确。我认为它们可能是 Raschka 为了可读性而做出的简化，因为我 100% 确定他自己对这些事情没有任何混淆！</p>
+<ul>
+<li>当他第一次提到 LLM 时（在他明确表示 LLM 指的是 GPT 之前），他说 LLM 专注于下一个单词预测，当然，当你考虑到 BERT 及其类似模型时，这并不完全正确。我认为这只是我这边“一知半解”的情况——我已经知道 BERT 可以处理预测掩码 token 而不仅仅是下一个单词，所以我发现这比不了解这一点的人更令人困惑。[更新：为了清晰起见，这个挑剔点特别针对第 2 页的提及——后面会解释清楚。]</li>
+<li>他说“与深度学习相比，传统机器学习需要手动特征提取”，这在我看来有点不准确——毕竟，还有其他机器学习系统（例如核方法，甚至用于垃圾邮件过滤的朴素贝叶斯）可以自行提取特征。不过这是一个小挑剔，保持简单是有道理的。</li>
+</ul>
+<h2 id="总结">总结</h2>
+<p>以上就是我从这本书第一章中得到的收获。当然，还涵盖了很多其他内容，但它们要么是为未来章节做铺垫，要么是我已经足够熟悉的背景信息，所以没有让我感到惊讶。</p>
+<p>我真的很期待明天的第二章！</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://maorz.space">MRZ</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://maorz.space/2025/03/09/%E7%BF%BB%E8%AF%91-Writing-an-LLM-from-scratch-part-1/">https://maorz.space/2025/03/09/%E7%BF%BB%E8%AF%91-Writing-an-LLM-from-scratch-part-1/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://maorz.space" target="_blank">MRZ's blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/03/09/%E7%BF%BB%E8%AF%91-Writing-an-LLM-from-scratch-part-2/" title="翻译:Writing_an_LLM_from_scratch_part_2"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">翻译:Writing_an_LLM_from_scratch_part_2</div></div></a></div><div class="next-post pull-right"><a href="/2024/06/04/%E4%B8%8E%E6%80%A7%E8%83%BD%E7%9B%B8%E5%85%B3%E7%9A%84%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E6%96%87%E7%8C%AE/" title="与性能相关的矩阵特征文献"><img class="cover" src="https://s2.loli.net/2024/06/04/AMqryoJX7SQ93gm.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">与性能相关的矩阵特征文献</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">MRZ</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/godjos" target="_blank" title="Github"><i class="fab fa-github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到MRZ的博客,欢迎大家分享和交流.</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">从零开始构建大型语言模型（LLM），第一部分</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Transformer"><span class="toc-text">Transformer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE"><span class="toc-text">数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%9E%E5%AE%8C%E5%85%A8%E5%8B%98%E8%AF%AF"><span class="toc-text">非完全勘误</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/09/%E7%BF%BB%E8%AF%91-Writing-an-LLM-from-scratch-part-2/" title="翻译:Writing_an_LLM_from_scratch_part_2">翻译:Writing_an_LLM_from_scratch_part_2</a><time datetime="2025-03-09T13:32:04.000Z" title="发表于 2025-03-09 21:32:04">2025-03-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/09/%E7%BF%BB%E8%AF%91-Writing-an-LLM-from-scratch-part-1/" title="翻译:Writing_an_LLM_from_scratch_part_1">翻译:Writing_an_LLM_from_scratch_part_1</a><time datetime="2025-03-09T12:56:57.000Z" title="发表于 2025-03-09 20:56:57">2025-03-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/06/04/%E4%B8%8E%E6%80%A7%E8%83%BD%E7%9B%B8%E5%85%B3%E7%9A%84%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E6%96%87%E7%8C%AE/" title="与性能相关的矩阵特征文献"><img src="https://s2.loli.net/2024/06/04/AMqryoJX7SQ93gm.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="与性能相关的矩阵特征文献"/></a><div class="content"><a class="title" href="/2024/06/04/%E4%B8%8E%E6%80%A7%E8%83%BD%E7%9B%B8%E5%85%B3%E7%9A%84%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E6%96%87%E7%8C%AE/" title="与性能相关的矩阵特征文献">与性能相关的矩阵特征文献</a><time datetime="2024-06-04T12:59:15.000Z" title="发表于 2024-06-04 20:59:15">2024-06-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/03/31/AMG%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%9B%B8%E5%85%B3%E6%96%87%E7%AB%A0/" title="AMG性能优化相关文章"><img src="https://s2.loli.net/2023/03/31/B8k1udiy75PSjr6.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="AMG性能优化相关文章"/></a><div class="content"><a class="title" href="/2023/03/31/AMG%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%9B%B8%E5%85%B3%E6%96%87%E7%AB%A0/" title="AMG性能优化相关文章">AMG性能优化相关文章</a><time datetime="2023-03-31T11:51:44.000Z" title="发表于 2023-03-31 19:51:44">2023-03-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/02/09/HPCToolKit%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" title="HPCToolKit基础使用教程"><img src="https://s2.loli.net/2023/02/09/KnQ17ctEd3MX2iV.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="HPCToolKit基础使用教程"/></a><div class="content"><a class="title" href="/2023/02/09/HPCToolKit%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" title="HPCToolKit基础使用教程">HPCToolKit基础使用教程</a><time datetime="2023-02-09T06:48:44.000Z" title="发表于 2023-02-09 14:48:44">2023-02-09</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By MRZ</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadDisqus () {
+  var disqus_config = function () {
+    this.page.url = 'https://maorz.space/2025/03/09/%E7%BF%BB%E8%AF%91-Writing-an-LLM-from-scratch-part-1/'
+    this.page.identifier = '/2025/03/09/%E7%BF%BB%E8%AF%91-Writing-an-LLM-from-scratch-part-1/'
+    this.page.title = '翻译:Writing_an_LLM_from_scratch_part_1'
+  };
+
+  window.disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://godjosblog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+
+  document.getElementById('darkmode').addEventListener('click', () => {
+    setTimeout(() => window.disqusReset(), 200)
+  })
+}
+
+if ('Disqus' === 'Disqus' || !false) {
+  if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
